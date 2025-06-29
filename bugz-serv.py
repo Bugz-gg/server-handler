@@ -11,11 +11,11 @@ load_dotenv(".telegram-env")
 TOKEN = os.getenv("TOKEN")
 
 
-async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def hello(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
 
-async def list(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def list(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> None:
     ls = get_saves_list()
     await update.message.reply_text(f'the list of saves is {ls}')
 
@@ -49,7 +49,7 @@ async def start(update, context):
             await update.message.reply_text(mess)
             return
 
-        result = send_start(save_name)
+        result, cmd = send_start(save_name)
         if result.returncode == 0:
             await update.message.reply_text(f"Started:\n{cmd}\nOutput:\n{result.stdout}")
             return
@@ -62,7 +62,7 @@ async def start(update, context):
 
 async def down(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     try:
-        result = send_down()
+        result, cmd = send_down()
         if result.returncode == 0:
             await update.message.reply_text(f"Stopped:\n{cmd}\nOutput:\n{result.stdout}")
             return

@@ -3,8 +3,6 @@ from discord.ext import commands
 from utils.config import TOKEN, ADMIN_USERS
 from utils.commands import *
 
-print(TOKEN)
-
 
 def is_admin(user_id):
     return user_id in ADMIN_USERS
@@ -20,24 +18,24 @@ async def on_ready():
     print(f'Logged in as {bot.user}!')
 
 
-@bot.tree.command(name="ping", description="Responds with Pong!")
+@bot.tree.command(name="ping", description="Répond avec pong.")
 async def ping(interaction: discord.Interaction):
     await interaction.response.send_message("Pong!", ephemeral=True)
 
 
-@bot.tree.command(name="stopserver", description="Stop the server")
+@bot.tree.command(name="stopserver", description="Arrête le serveur.")
 async def stopserver(interaction: discord.Interaction):
     try:
-        result = send_down()
+        result, _ = send_down()
         if result.returncode == 0:
-            return await interaction.response.send_message(f"Server stopped.")
+            return await interaction.response.send_message(f"Serveur arrêté.")
         else:
-            return await interaction.response.send_message(f"Error: {result.stderr}")
+            return await interaction.response.send_message(f"Erreur: {result.stderr}")
     except Exception as e:
-        return await interaction.response.send_message(f"Exception encountered: {e}")
+        return await interaction.response.send_message(f"Erreur: {e}")
 
 
-@bot.tree.command(name="startserver", description="Start server with a save")
+@bot.tree.command(name="startserver", description="Lance le serveur avec une certaine sauvegarde.")
 async def startserver(interaction: discord.Interaction, sauvegarde: str | None = None):
     saves = get_saves_list()
     chosen_save = sauvegarde
@@ -50,7 +48,7 @@ async def startserver(interaction: discord.Interaction, sauvegarde: str | None =
         except Exception as e:
             (lambda _: _)(e)
         try:
-            resultat = send_start(chosen_save)
+            resultat, _ = send_start(chosen_save)
         except Exception as e:
             return await interaction.response.send_message(f"Lancement raté: {e}\n")
 
