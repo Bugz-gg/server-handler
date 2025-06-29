@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils.config import TOKEN, ADMIN_USERS
+from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS
 from utils.commands import *
 
 
@@ -68,4 +68,4 @@ async def setup_hook():
 
 
 if __name__ == "__main__":
-    bot.run(TOKEN)
+    bot.run(DISCORD_BOT_TOKEN)
