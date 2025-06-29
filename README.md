@@ -1,4 +1,4 @@
-## telegram-handler
+# telegram-handler
 
 Gestionnaire du serveur personnel de **Bugz-gg**.
 
