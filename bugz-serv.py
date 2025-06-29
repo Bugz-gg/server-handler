@@ -1,6 +1,5 @@
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes, Updater
-# from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import os
 from dotenv import load_dotenv
 import subprocess
