@@ -22,72 +22,47 @@ async def on_ready():
 
 @bot.tree.command(name="ping", description="Responds with Pong!")
 async def ping(interaction: discord.Interaction):
-    await interaction.response.send_message("Pong!")
+    await interaction.response.send_message("Pong!", ephemeral=True)
 
 
 @bot.tree.command(name="stopserver", description="Stop the server")
 async def stopserver(interaction: discord.Interaction):
-    await send_message("/stop")
-    # TODO: Properly check if server actually stopped.
-    await interaction.response.send_message("Server stopped.")
+    try:
+        result = send_down()
+        if result.returncode == 0:
+            return await interaction.response.send_message(f"Server stopped.")
+        else:
+            return await interaction.response.send_message(f"Error: {result.stderr}")
+    except Exception as e:
+        return await interaction.response.send_message(f"Exception encountered: {e}")
 
 
 @bot.tree.command(name="startserver", description="Start server with a save")
-async def startserver(interaction: discord.Interaction, sauvegarde: str):
-    saves = await get_saves()
-    # saves = ["oh", "tuot"]  # Alternative hardcoded list
+async def startserver(interaction: discord.Interaction, sauvegarde: str | None = None):
+    saves = get_saves_list()
     chosen_save = sauvegarde
     print(saves)
     print(chosen_save)
 
-    if chosen_save in saves:
-        reply = await send_message(f"/start {chosen_save}")
-        # TODO: Check if successfully started server.
-        await interaction.response.send_message(
-            f"Serveur lancé avec la sauvegarde {chosen_save}.")
+    if chosen_save is not None and chosen_save in saves:
+        try:
+            chosen_save = saves[int(chosen_save)]
+        except Exception as e:
+            (lambda _: _)(e)
+        try:
+            resultat = send_start(chosen_save)
+        except Exception as e:
+            return await interaction.response.send_message(f"Lancement raté: {e}\n")
+
+        if not resultat.returncode:
+            return await interaction.response.send_message(f"Serveur lancé avec la sauvegarde {chosen_save}.")
+        else:
+            return await interaction.response.send_message(f"Lancement raté: {resultat.stderr}")
     else:
-        saves_formatted = ", ".join([f"`{s}`" for s in saves])
-        await interaction.response.send_message(
-            f"Liste des sauvegardes disponibles: {saves_formatted}")
+        saves_formatted = "\n".join([f"`{i}`: `{s}`" for i, s in enumerate(saves)])
+        await interaction.response.send_message(f"Liste des sauvegardes disponibles: \n{saves_formatted}")
 
 
-@bot.tree.command(name="down", description="Send down command")
-async def down(interaction: discord.Interaction):
-    if not is_admin(interaction.user.id):
-        await interaction.response.send_message(
-            "Et non, cette commande n'est pas pour toi.", ephemeral=True)
-        return
-
-    await send_message("/down")
-    await interaction.response.send_message("Commande `/down` envoyée.",
-                                            ephemeral=True)
-
-
-@bot.tree.command(name="hello", description="Send hello command")
-async def hello(interaction: discord.Interaction):
-    if not is_admin(interaction.user.id):
-        await interaction.response.send_message(
-            "Et non, cette commande n'est pas pour toi.", ephemeral=True)
-        return
-
-    await send_message("/hello")
-    await interaction.response.send_message("Commande `/hello` envoyée.",
-                                            ephemeral=True)
-
-
-@bot.tree.command(name="stop_cmd", description="Send stop_cmd command")
-async def stop_cmd(interaction: discord.Interaction):
-    if not is_admin(interaction.user.id):
-        await interaction.response.send_message(
-            "Et non, cette commande n'est pas pour toi.", ephemeral=True)
-        return
-
-    await send_message("/stop_cmd")
-    await interaction.response.send_message("Commande `/stop_cmd` envoyée.",
-                                            ephemeral=True)
-
-
-# Sync slash commands (you'll need to run this once)
 @bot.event
 async def setup_hook():
     await bot.tree.sync()

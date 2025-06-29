@@ -12,8 +12,7 @@ TOKEN = os.getenv("TOKEN")
 
 
 async def hello(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text(f'Hello {update.effective_user.first_name}'
-                                    )
+    await update.message.reply_text(f'Hello {update.effective_user.first_name}')
 
 
 async def list(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -35,8 +34,7 @@ async def start(update, context):
             elif arg in ls:
                 save_name = arg
             else:
-                await update.message.reply_text(
-                    "Invalid argument. Please try again.")
+                await update.message.reply_text("Invalid argument. Please try again.")
                 return
 
         # If this is a reply with a number
@@ -45,21 +43,15 @@ async def start(update, context):
             if 0 <= saves_number < len(ls):
                 save_name = ls[saves_number]
             else:
-                await update.message.reply_text(
-                    "Invalid number. Please try again.")
+                await update.message.reply_text("Invalid number. Please try again.")
                 return
         else:
             await update.message.reply_text(mess)
             return
 
-        cmd = f"SAVE_NAME={save_name} docker compose up -d"
-        result = subprocess.run(cmd,
-                                shell=True,
-                                capture_output=True,
-                                text=True)
+        result = send_start(save_name)
         if result.returncode == 0:
-            await update.message.reply_text(
-                f"Started:\n{cmd}\nOutput:\n{result.stdout}")
+            await update.message.reply_text(f"Started:\n{cmd}\nOutput:\n{result.stdout}")
             return
         else:
             await update.message.reply_text(f"Error:\n{result.stderr}")
@@ -69,15 +61,10 @@ async def start(update, context):
 
 
 async def down(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    cmd = f"docker compose down"
     try:
-        result = subprocess.run(cmd,
-                                shell=True,
-                                capture_output=True,
-                                text=True)
+        result = send_down()
         if result.returncode == 0:
-            await update.message.reply_text(
-                f"Stopped:\n{cmd}\nOutput:\n{result.stdout}")
+            await update.message.reply_text(f"Stopped:\n{cmd}\nOutput:\n{result.stdout}")
             return
         else:
             await update.message.reply_text(f"Error:\n{result.stderr}")
@@ -94,7 +81,7 @@ def main() -> None:
     app.add_handler(CommandHandler("hello", hello))
     app.add_handler(CommandHandler("list", list))
     app.add_handler(CommandHandler("start", start))
-    app.add_handler(CommandHandler("stop", down))
+    app.add_handler(CommandHandler("down", down))
 
     # Démarrez l'application
     app.run_polling()
