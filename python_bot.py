@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS
+from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS, YES
 from utils.commands import *
 
 
@@ -59,6 +59,11 @@ async def startserver(interaction: discord.Interaction, sauvegarde: str | None =
     else:
         saves_formatted = "\n".join([f"`{i}`: `{s}`" for i, s in enumerate(saves)])
         await interaction.response.send_message(f"Liste des sauvegardes disponibles: \n{saves_formatted}")
+
+
+@bot.tree.command(name="oui", description="Lance-moi.")
+async def oui(interaction: discord.Interaction):
+    return await interaction.response.send_message(f"<@{YES}>")
 
 
 @bot.event
