@@ -80,7 +80,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         help_message += "/down - Stop the Factorio server for now\n"
         help_message += "/list - List all the saves available on the server\n"
         help_message += "/help - Shows you all the available commands\n"
-       await update.message.reply_text(help_message+user_id)
+       await update.message.reply_text(f"{help_message}{user_id}")
     else:
         help_message = "Voici la liste des commandes disponibles :\n"
         help_message += "/start - Démarre le bot et affiche un message de bienvenue.\n"
