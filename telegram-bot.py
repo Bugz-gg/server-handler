@@ -97,6 +97,7 @@ def main() -> None:
     app.add_handler(CommandHandler("list", list))
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("down", down))
+    app.add_handler(CommandHandler("help", help))
 
     # Démarrez l'application
     app.run_polling()
