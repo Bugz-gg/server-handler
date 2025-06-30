@@ -72,6 +72,21 @@ async def down(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     except Exception as e:
         await update.message.reply_text(f"Exception: {e}")
 
+async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user_id = update.message.from_user.id
+    if True: #user_id in username_list:
+        help_message = "Here are the available commands:\n"
+        help_message += "/start - Start a selected save for Factorio\n"
+        help_message += "/down - Stop the Factorio server for now\n"
+        help_message += "/list - List all the saves available on the server\n"
+        help_message += "/help - Shows you all the available commands\n"
+       await update.message.reply_text(help_message+user_id)
+    else:
+        help_message = "Voici la liste des commandes disponibles :\n"
+        help_message += "/start - Démarre le bot et affiche un message de bienvenue.\n"
+        help_message += "/inscription - Permet de s'inscrire au créneau de volley de Bordeaux INP.\n"
+        await update.message.reply_text(help_message)
+
 
 def main() -> None:
     # Créez l'application avec votre token d'API
