@@ -10,4 +10,5 @@ if os.getenv("ADMIN_USERS"):
     ADMIN_USERS = [user_id.strip() for user_id in os.getenv("ADMIN_USERS").split(",")]
 
 YES = os.getenv("YES")
-PICTURES = os.getenv("PICTURES").split("|")
+picture_directory = "/opt/discord-bot/pictures"
+PICTURES = [os.path.abspath(os.path.join(picture_directory, f)) for f in os.listdir(picture_directory)]
