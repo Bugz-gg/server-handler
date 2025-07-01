@@ -9,6 +9,7 @@ from utils.commands import *
 load_dotenv(".telegram-env")
 
 TOKEN = os.getenv("TOKEN")
+ADMINS = os.getenv("ADMINS")
 
 
 async def hello(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -80,7 +81,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         help_message += "/down - Stop the Factorio server for now\n"
         help_message += "/list - List all the saves available on the server\n"
         help_message += "/help - Shows you all the available commands\n"
-       await update.message.reply_text(f"{help_message}{user_id}")
+        await update.message.reply_text(f"{help_message}")
     else:
         help_message = "Voici la liste des commandes disponibles :\n"
         help_message += "/start - Démarre le bot et affiche un message de bienvenue.\n"
