@@ -10,3 +10,4 @@ if os.getenv("ADMIN_USERS"):
     ADMIN_USERS = [user_id.strip() for user_id in os.getenv("ADMIN_USERS").split(",")]
 
 YES = os.getenv("YES")
+PICTURES = os.getenv("PICTURES").split("|")

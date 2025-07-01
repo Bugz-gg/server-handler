@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
-from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS, YES
+from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS, YES, PICTURES
 from utils.commands import *
+from random import choice
 
 
 def is_admin(user_id):
@@ -64,6 +65,12 @@ async def startserver(interaction: discord.Interaction, sauvegarde: str | None =
 @bot.tree.command(name="oui", description="Lance-moi.")
 async def oui(interaction: discord.Interaction):
     return await interaction.response.send_message(f"<@{YES}>")
+
+
+@bot.tree.command(name="randompicture", description="Affiche une image aléatoire.")
+async def randompicture(interaction: discord.Interaction):
+    rand_pict = choice(PICTURES)
+    return await interaction.response.send_message(f"https://www.dropbox.com/scl/fi/{rand_pict}&dl=1")
 
 
 @bot.event
