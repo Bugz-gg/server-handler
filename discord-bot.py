@@ -1,11 +1,13 @@
 import discord
 from discord.ext import commands
-from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS, YES
+from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS, YES, PICTURES, picture_directory
 from utils.commands import *
+from utils.tools import download_file
+from random import choice
 
 
 def is_admin(user_id):
-    return user_id in ADMIN_USERS
+    return str(user_id) in ADMIN_USERS
 
 
 intents = discord.Intents.default()
@@ -64,6 +66,23 @@ async def startserver(interaction: discord.Interaction, sauvegarde: str | None =
 @bot.tree.command(name="oui", description="Lance-moi.")
 async def oui(interaction: discord.Interaction):
     return await interaction.response.send_message(f"<@{YES}>")
+
+
+@bot.tree.command(name="randompicture", description="Affiche une image aléatoire.")
+async def randompicture(interaction: discord.Interaction):
+    rand_pict = choice(PICTURES)
+    return await interaction.response.send_message(file=discord.File(open(rand_pict, 'rb')))
+
+
+@bot.tree.command(name="uploadpicture", description="Non. Tu t'es trompé.")
+async def uploadpicture(interaction: discord.Interaction, file: discord.Attachment):
+    if not is_admin(interaction.user.id):
+        return await interaction.response.send_message("Non, tu t'es encore trompé.")
+    if file.content_type and not file.content_type.startswith("image/"):
+        return await interaction.response.send_message("Pas une image.", ephemeral=True)
+    final_path = download_file(file.url, picture_directory, "pic")
+    PICTURES.append(final_path)  #  Otherwise, the uploaded pictures would only be available on next bot reboot.
+    return await interaction.response.send_message(f"Enregistré sous {final_path}", ephemeral=True)
 
 
 @bot.event
