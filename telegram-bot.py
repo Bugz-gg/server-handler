@@ -10,9 +10,9 @@ from utils.commands import *
 load_dotenv(".telegram-env")
 
 TOKEN = os.getenv("TOKEN")
-ADMINS:List[str] = [] #os.getenv("ADMINS")
+ADMINS:List[int] = [] #os.getenv("ADMINS")
 if os.getenv("ADMINS"):
-    ADMINS = [user_id.strip() for user_id in os.getenv("ADMINS").split(",")]
+    ADMINS = [int(user_id.strip()) for user_id in os.getenv("ADMINS").split(",")]
 
 
 
