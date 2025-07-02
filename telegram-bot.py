@@ -104,13 +104,7 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 async def shutdown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.from_user.id == ADMINS[0]:
         cmd = "shutdown now"
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-        if result.returncode == 0:
-            await update.message.reply_text(f"Server is shutting down.\nCommand: {cmd}\nOutput:\n{result.stdout}")
-        else:
-            await update.message.reply_text(f"Failed to shut down the server.\nCommand: {cmd}\nError:\n{result.stderr}")
-        return
-
+        return subprocess.run(cmd, shell=True, capture_output=True, text=True)
 
 async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.from_user.id in ADMINS:
