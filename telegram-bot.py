@@ -10,9 +10,9 @@ from utils.commands import *
 load_dotenv(".telegram-env")
 
 TOKEN = os.getenv("TOKEN")
-ADMINS:List[int] = [] #os.getenv("ADMINS")
+ADMINS:List[str] = [] #os.getenv("ADMINS")
 if os.getenv("ADMINS"):
-    ADMINS = [int(user_id.strip()) for user_id in os.getenv("ADMINS").split(",")]
+    ADMINS = [user_id.strip() for user_id in os.getenv("ADMINS").split(",")]
 
 
 
@@ -28,7 +28,7 @@ async def list(update: Update, _context: ContextTypes.DEFAULT_TYPE) -> None:
 async def start(update, context):
 
     user_id = update.message.from_user.id
-    if user_id in ADMINS:
+    if str(user_id) in ADMINS:
         try:
             ls = get_saves_list()
             saves = "\n".join([f"{i}: {name}" for i, name in enumerate(ls)])
@@ -71,7 +71,7 @@ async def start(update, context):
 async def down(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
     user_id = update.message.from_user.id
-    if user_id in ADMINS:
+    if str(user_id) in ADMINS:
         try:
             result, cmd = send_down()
             if result.returncode == 0:
@@ -85,7 +85,7 @@ async def down(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.message.from_user.id
-    if user_id in ADMINS:
+    if str(user_id) in ADMINS:
         help_message = "Here are the available commands:\n"
         help_message += "/start - Start a selected save for Factorio\n"
         help_message += "/down - Stop the Factorio server for now\n"
@@ -102,12 +102,12 @@ async def help(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
 
 async def shutdown(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message.from_user.id == ADMINS[0]:
+    if str(update.message.from_user.id) == ADMINS[0]:
         cmd = "shutdown now"
         return subprocess.run(cmd, shell=True, capture_output=True, text=True)
 
 async def restart(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if update.message.from_user.id in ADMINS:
+    if str(update.message.from_user.id) in ADMINS:
         cmd = "reboot"
         return subprocess.run(cmd, shell=True, capture_output=True, text=True), cmd
 
