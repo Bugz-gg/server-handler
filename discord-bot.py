@@ -1,10 +1,11 @@
 import discord
+import time
 from discord.ext import commands
 from utils.config import DISCORD_BOT_TOKEN, ADMIN_USERS, YES, PICTURES, picture_directory
 from utils.commands import *
 from utils.tools import download_file
 from random import choice
-
+import random
 
 def is_admin(user_id):
     return str(user_id) in ADMIN_USERS
@@ -70,6 +71,7 @@ async def oui(interaction: discord.Interaction, texte: str = ""):
 
 @bot.tree.command(name="randompicture", description="Affiche une image aléatoire.")
 async def randompicture(interaction: discord.Interaction):
+    random.seed(time.time())
     rand_pict = choice(PICTURES)
     return await interaction.response.send_message(file=discord.File(open(rand_pict, 'rb')))
 
